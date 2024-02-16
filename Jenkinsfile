@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('gitclone') {
             steps {
-                git 'https://github.com/marinahanyy/angular-realworld-example-app.git'
+                checkout scm
             }
         }
 
