@@ -1,19 +1,30 @@
-node {
-    stage('Checkout') {
-        checkout scm
+pipeline {
+    agent {
+        docker {
+            image 'node:14'  // Use an official Node.js image
+            args '-p 4200:4200'  // Map port 4200 from container to host
+        }
     }
 
-    stage('Build') {
-        bat 'npm install'
-        bat 'npm run build'
-    }
-    stage('Dockerize') {
-        // Build a Docker image from the Angular app
-        bat 'docker build -t angular-realworld-app .'
-    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
-    stage('Publish') {
-        // Add steps to publish or deploy your application
-        // For example, deploy to a web server or push to a cloud platform
+        stage('Build') {
+            steps {
+                sh 'npm install'
+                sh 'npm run build'
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                // Add steps to publish or deploy your application
+                // For example, deploy to a web server or push to a cloud platform
+            }
+        }
     }
 }
