@@ -1,5 +1,5 @@
 # Use an official Node.js image with npm for building
-FROM node:16 as builder
+FROM node:18 as builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build --prod
 
 # Use a lightweight HTTP server to serve the Angular app
-FROM node:16-alpine
+FROM node:18-alpine
 
 # Set the working directory in the container
 WORKDIR /app
