@@ -20,10 +20,9 @@ pipeline {
             }
         }
 
-        stage('Publish') {
+        stage('Run') {
             steps {
-                // Add steps to publish or deploy your application
-                // For example, deploy to a web server or push to a cloud platform
+                sh 'npm start'
             }
         }
     }
