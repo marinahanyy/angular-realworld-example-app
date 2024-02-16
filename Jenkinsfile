@@ -1,37 +1,46 @@
-pipeline {
-    agent {
-        docker {
-            image 'node:14'
-            args '-p 4200:4200'
-        }
-    }
+pipeline{
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
+	agent {label 'any'}
 
-        stage('Build and Run with Docker') {
-            steps {
-                // Build Docker image
-                sh 'docker build -t my-angular-app .'
+	environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}
 
-                // Run Docker container
-                sh 'docker run -p 4200:4200 my-angular-app'
-            }
-        }
+	stages {
+	    
+	    stage('gitclone') {
 
-        stage('Start Docker Service - Linux Only') {
-            agent {
-                label 'linux'
-            }
-            steps {
-                script {
-                    sh 'sudo service docker start'
-                }
-            }
-        }
-    }
+			steps {
+				git 'https://github.com/marinahanyy/angular-realworld-example-app.git'
+			}
+		}
+
+		stage('Build') {
+
+			steps {
+				sh 'docker build -t marinaaaaa/angular-image .'
+			}
+		}
+
+		stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+
+		stage('Push') {
+
+			steps {
+				sh 'docker push marinaaaaa/angular-image'
+			}
+		}
+	}
+
+	post {
+		always {
+			sh 'docker logout'
+		}
+	}
+
 }
