@@ -11,7 +11,6 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                // Checkout the code from the Git repository
                 checkout scm
             }
         }
@@ -20,16 +19,16 @@ pipeline {
             steps {
                 script {
                     // Print Node.js version for verification
-                    sh 'node --version'
+                    bat 'node --version'
                     
                     // Print npm version for verification
-                    sh 'npm --version'
+                    bat 'npm --version'
 
                     // Install npm dependencies
-                    sh 'npm install'
+                    bat 'npm install'
 
                     // Build your project (adjust this command based on your project)
-                    sh 'npm run build'
+                    bat 'npm run build'
                 }
             }
         }
@@ -38,7 +37,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-              echo 'deployments are here.'
                 // Your deployment steps go here
             }
         }
