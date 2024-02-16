@@ -15,15 +15,35 @@ pipeline {
             }
         }
 
+        stage('Install and Build') {
+            steps {
+                script {
+                    // Print Node.js version for verification
+                    bat 'node --version'
+                    
+                    // Print npm version for verification
+                    bat 'npm --version'
+
+                    // Install npm dependencies
+                    bat 'npm install'
+
+                    // Build your project (adjust this command based on your project)
+                    bat 'npm run build'
+                }
+            }
+        }
+
         stage('Build, Login, Push') {
             steps {
                 script {
                     // Build the Docker image using the builder stage
-                    withCredentials([dockerUsernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        bat 'docker build -t marinaaaaa/angular-image .'
-                        bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
-                        bat 'docker push marinaaaaa/angular-image'
-                    }
+                    sh 'docker build -t marinaaaaa/angular-image .'
+
+                    // Use credentials to log in to Docker Hub
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+
+                    // Push the Docker image to Docker Hub
+                    sh 'docker push marinaaaaa/angular-image'
                 }
             }
         }
@@ -47,7 +67,7 @@ pipeline {
         }
         always {
             // Always log out from Docker Hub
-            bat 'docker logout'
+            sh 'docker logout'
             echo 'Always executed steps go here.'
         }
     }
