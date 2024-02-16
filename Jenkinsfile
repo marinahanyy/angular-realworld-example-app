@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/yourusername/your-angular-app.git'
+                git 'https://github.com/marinahanyy/angular-realworld-example-app.git'
             }
         }
 
