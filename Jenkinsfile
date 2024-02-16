@@ -1,46 +1,45 @@
-pipeline{
+pipeline {
+    agent {label 'any'}
 
-	agent {label 'any'}
+    environment {
+        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+    }
 
-	environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-	}
+    stages {
+        stage('gitclone') {
+            steps {
+                git 'https://github.com/marinahanyy/angular-realworld-example-app.git'
+            }
+        }
 
-	stages {
-	    
-	    stage('gitclone') {
+        stage('Build') {
+            steps {
+                script {
+                    // Build the Docker image using the builder stage
+                    sh 'docker build -t marinaaaaa/angular-image -f Dockerfile .'
+                }
+            }
+        }
 
-			steps {
-				git 'https://github.com/marinahanyy/angular-realworld-example-app.git'
-			}
-		}
+        stage('Login') {
+            steps {
+                // Use credentials to log in to Docker Hub
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
 
-		stage('Build') {
+        stage('Push') {
+            steps {
+                // Push the Docker image to Docker Hub
+                sh 'docker push marinaaaaa/angular-image'
+            }
+        }
+    }
 
-			steps {
-				sh 'docker build -t marinaaaaa/angular-image .'
-			}
-		}
-
-		stage('Login') {
-
-			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-			}
-		}
-
-		stage('Push') {
-
-			steps {
-				sh 'docker push marinaaaaa/angular-image'
-			}
-		}
-	}
-
-	post {
-		always {
-			sh 'docker logout'
-		}
-	}
-
+    post {
+        always {
+            // Always log out from Docker Hub
+            sh 'docker logout'
+        }
+    }
 }
