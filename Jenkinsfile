@@ -37,6 +37,12 @@ pipeline {
     }
 
     post {
+        success {
+            echo 'Build successful! Add additional success steps if needed.'
+        }
+        failure {
+            echo 'Build failed! Add additional failure steps if needed.'
+        }
         always {
             // Add any post-build actions you need to perform
         }
