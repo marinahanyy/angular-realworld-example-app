@@ -7,6 +7,10 @@ node {
         bat 'npm install'
         bat 'npm run build'
     }
+    stage('Dockerize') {
+        // Build a Docker image from the Angular app
+        bat 'docker build -t angular-realworld-app .'
+    }
 
     stage('Publish') {
         // Add steps to publish or deploy your application
