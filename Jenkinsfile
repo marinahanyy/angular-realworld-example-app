@@ -37,13 +37,10 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the builder stage
-                    sh 'docker build -t marinaaaaa/angular-image .'
+                    bat 'docker build -t marinaaaaa/angular-image .'
+                    bat 'echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin'
+                    bat 'docker push marinaaaaa/angular-image'
 
-                    // Use credentials to log in to Docker Hub
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-
-                    // Push the Docker image to Docker Hub
-                    sh 'docker push marinaaaaa/angular-image'
                 }
             }
         }
