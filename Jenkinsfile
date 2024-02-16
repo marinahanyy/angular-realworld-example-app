@@ -2,44 +2,45 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+        // Define any environment variables needed for your build
+        NODEJS_HOME = tool 'NodeJS'
+        PATH = "${NODEJS_HOME}/bin:${PATH}"
     }
 
     stages {
-        stage('gitclone') {
+        stage('Checkout') {
             steps {
-                checkout scm
+                // Checkout your Angular app source code from the repository
+                git 'https://github.com/yourusername/your-angular-app.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Install Node.js dependencies
+                sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    // Build the Docker image using the builder stage
-                    sh 'docker build -t marinaaaaa/angular-image .'
-                }
+                // Build Angular app
+                sh 'npm run build --prod'
             }
         }
 
-        stage('Login') {
+        stage('Deploy') {
             steps {
-                // Use credentials to log in to Docker Hub
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-
-        stage('Push') {
-            steps {
-                // Push the Docker image to Docker Hub
-                sh 'docker push marinaaaaa/angular-image'
+                // Add steps to deploy your Angular app (e.g., copy to a web server, Dockerize, etc.)
+                // Example: Copy the build artifacts to a web server
+                sh 'cp -r dist/* /var/www/html/'
             }
         }
     }
 
     post {
         always {
-            // Always log out from Docker Hub
-            sh 'docker logout'
+            // Clean up steps or notifications can go here
         }
     }
 }
