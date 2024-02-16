@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'any'}
+    agent any
 
     environment {
         DOCKERHUB_CREDENTIALS=credentials('dockerhub')
@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the builder stage
-                    sh 'docker build -t marinaaaaa/angular-image -f Dockerfile .'
+                    sh 'docker build -t marinaaaaa/angular-image .'
                 }
             }
         }
