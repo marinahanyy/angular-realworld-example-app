@@ -1,5 +1,5 @@
-# Use an official Node.js image with npm
-FROM node:14 as builder
+# Use an official Node.js image with npm for building
+FROM node:16 as builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,13 +17,16 @@ COPY . .
 RUN npm run build --prod
 
 # Use a lightweight HTTP server to serve the Angular app
-FROM nginx:alpine
+FROM node:16-alpine
+
+# Set the working directory in the container
+WORKDIR /app
 
 # Copy the built Angular app from the builder image
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /app
 
-# Expose port 80 for the HTTP server
-EXPOSE 80
+# Expose port 80 if needed
+# EXPOSE 80
 
-# The default command to start the HTTP server
-CMD ["nginx", "-g", "daemon off;"]
+# The default command to start the application
+CMD ["npm", "start"]
