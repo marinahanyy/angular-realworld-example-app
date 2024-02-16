@@ -15,18 +15,19 @@ pipeline {
             }
         }
       
+    stages {
         stage('Build, Login, Push') {
             steps {
                 script {
                     // Build the Docker image using the builder stage
-                    bat 'docker build -t marinaaaaa/angular-image .'
-                    bat 'echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin'
-                    bat 'docker push marinaaaaa/angular-image'
-
+                    withCredentials([dockerUsernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        bat 'docker build -t marinaaaaa/angular-image .'
+                        bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                        bat 'docker push marinaaaaa/angular-image'
+                    }
                 }
             }
         }
-
         // Add additional stages as needed
 
         stage('Deploy') {
