@@ -33,25 +33,41 @@ pipeline {
             }
         }
 
+        stage('Build, Login, Push') {
+            steps {
+                script {
+                    // Build the Docker image using the builder stage
+                    sh 'docker build -t marinaaaaa/angular-image .'
+
+                    // Use credentials to log in to Docker Hub
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+
+                    // Push the Docker image to Docker Hub
+                    sh 'docker push marinaaaaa/angular-image'
+                }
+            }
+        }
+
         // Add additional stages as needed
 
         stage('Deploy') {
             steps {
-              echo 'deploying.'
+                echo 'Deploying...'
                 // Your deployment steps go here
-              
             }
         }
     }
 
     post {
         success {
-            echo 'Build successful! Additional success steps can be added here.'
+            echo 'Build and Docker push successful! Additional success steps can be added here.'
         }
         failure {
-            echo 'Build failed! Additional failure steps can be added here.'
+            echo 'Build or Docker push failed! Additional failure steps can be added here.'
         }
         always {
+            // Always log out from Docker Hub
+            sh 'docker logout'
             echo 'Always executed steps go here.'
         }
     }
