@@ -15,24 +15,6 @@ pipeline {
             }
         }
 
-        stage('Install and Build') {
-            steps {
-                script {
-                    // Print Node.js version for verification
-                    bat 'node --version'
-                    
-                    // Print npm version for verification
-                    bat 'npm --version'
-
-                    // Install npm dependencies
-                    bat 'npm install'
-
-                    // Build your project (adjust this command based on your project)
-                    bat 'npm run build'
-                }
-            }
-        }
-
         stage('Build, Login, Push') {
             steps {
                 script {
