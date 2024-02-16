@@ -1,4 +1,4 @@
-# Use an official Node runtime as a base image
+# Use an official Node.js runtime as a base image
 FROM node:14
 
 # Set the working directory to /app
@@ -7,14 +7,17 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install app dependencies
+# Install dependencies
 RUN npm install
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Expose the port that the app will run on
+# Build the Angular application
+RUN npm run build
+
+# Expose port 4200 for the Angular app
 EXPOSE 4200
 
-# Define the command to run your app
+# Start the Angular application when the container runs
 CMD ["npm", "start"]
