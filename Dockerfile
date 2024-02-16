@@ -20,4 +20,5 @@ RUN npm run build
 EXPOSE 4200
 
 # Start the Angular application when the container runs
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
+
