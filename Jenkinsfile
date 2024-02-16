@@ -30,21 +30,25 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Add your deployment steps here
-                // For example, deploying to a server, cloud platform, etc.
+                script {
+                    // Add your deployment steps here
+                    // For example, deploying to a server, cloud platform, etc.
+                    echo 'Deployment steps go here.'
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Build successful! Add additional success steps if needed.'
+            echo 'Build successful! Additional success steps can be added here.'
         }
         failure {
-            echo 'Build failed! Add additional failure steps if needed.'
+            echo 'Build failed! Additional failure steps can be added here.'
         }
         always {
-            // Add any post-build actions you need to perform
+            // Add any post-build actions you need to perform regardless of success or failure
+            echo 'Always executed steps go here.'
         }
     }
 }
