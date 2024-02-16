@@ -22,5 +22,16 @@ pipeline {
                 sh 'docker run -p 4200:4200 my-angular-app'
             }
         }
+
+        stage('Start Docker Service - Linux Only') {
+            agent {
+                label 'linux'
+            }
+            steps {
+                script {
+                    sh 'sudo service docker start'
+                }
+            }
+        }
     }
 }
