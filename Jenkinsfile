@@ -1,11 +1,9 @@
 pipeline {
     agent any
 
-    environment {
-        // Define any environment variables needed for your build
-        NODEJS_HOME = tool 'NodeJS'
-        PATH = "${NODEJS_HOME}/bin:${PATH}"
-    }
+    tools {
+        nodejs 'NodeJS'
+      }
 
     stages {
         stage('Checkout') {
