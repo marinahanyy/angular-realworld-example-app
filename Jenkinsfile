@@ -1,42 +1,44 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'
-      }
-
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                git 'https://github.com/marinahanyy/angular-realworld-example-app.git'
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/marinahanyy/angular-realworld-example-app.git']]])
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install and Build') {
             steps {
-                sh 'npm install'
-            }
-        }
+                script {
+                    // Assuming 'NodeJS' tool is installed locally
+                    def nodejsHome = tool name: 'NodeJS', type: 'hudson.plugins.nodejs.tools.NodeJSInstallation'
+                    env.PATH = "${nodejsHome}/bin:${env.PATH}"
 
-        stage('Build') {
-            steps {
-                sh 'npm run build --prod'
+                    // Print NodeJS and npm versions for verification
+                    sh 'node --version'
+                    sh 'npm --version'
+
+                    // Install npm dependencies
+                    sh 'npm install'
+
+                    // Build your project
+                    sh 'npm run build'
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                // Add deployment steps here
-                // Example: Copy the build artifacts to a web server
-                sh 'cp -r dist/* /var/www/html/'
+                // Add your deployment steps here
+                // For example, deploying to a server, cloud platform, etc.
             }
         }
     }
 
     post {
         always {
-            // Clean up steps or notifications can go here
-            sh 'echo "Finished the build process"'
+            // Add any post-build actions you need to perform
         }
     }
 }
