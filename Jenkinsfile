@@ -14,8 +14,7 @@ pipeline {
                 checkout scm
             }
         }
-      
-    stages {
+
         stage('Build, Login, Push') {
             steps {
                 script {
@@ -28,6 +27,7 @@ pipeline {
                 }
             }
         }
+
         // Add additional stages as needed
 
         stage('Deploy') {
@@ -47,7 +47,7 @@ pipeline {
         }
         always {
             // Always log out from Docker Hub
-            sh 'docker logout'
+            bat 'docker logout'
             echo 'Always executed steps go here.'
         }
     }
