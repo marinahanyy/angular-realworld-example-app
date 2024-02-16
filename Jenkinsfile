@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'node:14'  // Use an official Node.js image
-            args '-p 4200:4200'  // Map port 4200 from container to host
+            image 'node:14'
+            args '-p 4200:4200'
         }
     }
 
@@ -13,16 +13,13 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build and Run with Docker') {
             steps {
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
+                // Build Docker image
+                sh 'docker build -t my-angular-app .'
 
-        stage('Run') {
-            steps {
-                sh 'npm start'
+                // Run Docker container
+                sh 'docker run -p 4200:4200 my-angular-app'
             }
         }
     }
