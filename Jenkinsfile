@@ -15,6 +15,33 @@ pipeline {
             }
         }
 
+        stage('Unit Test') {
+            steps {
+                script {
+                    // Run your unit tests (adjust this command based on your project)
+                    bat 'npm test'
+                }
+            }
+        }
+
+        stage('Code Hygiene: Linting') {
+            steps {
+                script {
+                    // Run linting (adjust this command based on your project)
+                    bat 'npm run lint'
+                }
+            }
+        }
+
+        stage('Code Hygiene: Formatting') {
+            steps {
+                script {
+                    // Run code formatting (adjust this command based on your project)
+                    bat 'npm run format'
+                }
+            }
+        }
+
         stage('Install and Build') {
             steps {
                 script {
