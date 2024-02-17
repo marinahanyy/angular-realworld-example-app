@@ -15,17 +15,20 @@ pipeline {
             }
         }
 
-        stage('Build, Login, Push') {
+        stage('Install and Build') {
             steps {
                 script {
-                    // Build the Docker image using the builder stage
-                    bat 'docker build -t marinaaaaa/angular-image .'
+                    // Print Node.js version for verification
+                    bat 'node --version'
+                    
+                    // Print npm version for verification
+                    bat 'npm --version'
 
-                    // Use credentials to log in to Docker Hub
-                    bat 'echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin'
+                    // Install npm dependencies
+                    bat 'npm install'
 
-                    // Push the Docker image to Docker Hub
-                    bat 'docker push marinaaaaa/angular-image'
+                    // Build your project (adjust this command based on your project)
+                    bat 'npm run build'
                 }
             }
         }
@@ -42,14 +45,12 @@ pipeline {
 
     post {
         success {
-            echo 'Build and Docker push successful! Additional success steps can be added here.'
+            echo 'Build successful! Additional success steps can be added here.'
         }
         failure {
-            echo 'Build or Docker push failed! Additional failure steps can be added here.'
+            echo 'Build failed! Additional failure steps can be added here.'
         }
         always {
-            // Always log out from Docker Hub
-            bat 'docker logout'
             echo 'Always executed steps go here.'
         }
     }
